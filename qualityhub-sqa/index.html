@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>QualityHub - SQA System</title>
+<link rel="stylesheet" href="styles.css" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-header">
+      <div class="logo-icon">🛡️</div>
+      <div>
+        <h1 class="logo-text">QualityHub</h1>
+        <p class="logo-sub">SQA System</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="#" class="nav-link active" data-page="dashboard">📊 Dashboard</a>
+      <a href="#" class="nav-link" data-page="testcases">🧪 Test Cases</a>
+      <a href="#" class="nav-link" data-page="bugs">🐞 Bug Tracking</a>
+      <a href="#" class="nav-link" data-page="reports">📈 Reports</a>
+    </nav>
+    <div class="sidebar-footer">
+      <a href="#" class="nav-link">⚙️ Settings</a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+    <!-- Dashboard -->
+    <section id="dashboard" class="page active">
+      <header class="page-header">
+        <h1>Dashboard</h1>
+        <p>Quality metrics overview for your project</p>
+      </header>
+      <div class="stats-grid" id="stats-grid"></div>
+      <div class="charts-grid">
+        <div class="card">
+          <h3>Test Results Distribution</h3>
+          <canvas id="testPieChart" height="200"></canvas>
+        </div>
+        <div class="card">
+          <h3>Bugs by Module</h3>
+          <canvas id="bugsBarChart" height="200"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header"><h3>Recent Bugs</h3></div>
+        <div id="recent-bugs" class="recent-list"></div>
+      </div>
+    </section>
+
+    <!-- Test Cases -->
+    <section id="testcases" class="page">
+      <header class="page-header flex-between">
+        <div>
+          <h1>Test Cases</h1>
+          <p id="tc-count"></p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('tc-modal')">+ New Test Case</button>
+      </header>
+      <div class="filters">
+        <input type="text" id="tc-search" placeholder="🔍 Search test cases..." class="input" />
+        <select id="tc-filter" class="input">
+          <option value="all">All Status</option>
+          <option value="passed">Passed</option>
+          <option value="failed">Failed</option>
+          <option value="running">Running</option>
+          <option value="not_run">Not Run</option>
+        </select>
+      </div>
+      <div class="card">
+        <table class="table">
+          <thead>
+            <tr><th>ID</th><th>Title</th><th>Module</th><th>Priority</th><th>Status</th><th>Assigned</th><th>Last Run</th></tr>
+          </thead>
+          <tbody id="tc-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Bug Tracking -->
+    <section id="bugs" class="page">
+      <header class="page-header flex-between">
+        <div>
+          <h1>Bug Tracking</h1>
+          <p id="bug-count"></p>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('bug-modal')">+ Report Bug</button>
+      </header>
+      <div class="filters">
+        <input type="text" id="bug-search" placeholder="🔍 Search bugs..." class="input" />
+        <select id="bug-sev" class="input">
+          <option value="all">All Severity</option>
+          <option value="critical">Critical</option>
+          <option value="high">High</option>
+          <option value="medium">Medium</option>
+          <option value="low">Low</option>
+        </select>
+        <select id="bug-status" class="input">
+          <option value="all">All Status</option>
+          <option value="open">Open</option>
+          <option value="in_progress">In Progress</option>
+          <option value="resolved">Resolved</option>
+          <option value="closed">Closed</option>
+        </select>
+      </div>
+      <div id="bug-list" class="bug-list"></div>
+    </section>
+
+    <!-- Reports -->
+    <section id="reports" class="page">
+      <header class="page-header">
+        <h1>Reports</h1>
+        <p>Quality trends and module health metrics</p>
+      </header>
+      <div class="charts-grid">
+        <div class="card">
+          <h3>Weekly Test Trends</h3>
+          <canvas id="trendChart" height="220"></canvas>
+        </div>
+        <div class="card">
+          <h3>Module Health</h3>
+          <canvas id="healthChart" height="220"></canvas>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Test Case Modal -->
+<div class="modal" id="tc-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Create Test Case</h2>
+      <button class="close-btn" onclick="closeModal('tc-modal')">×</button>
+    </div>
+    <form id="tc-form">
+      <label>Title<input name="title" class="input" required /></label>
+      <label>Description<textarea name="description" class="input" required></textarea></label>
+      <div class="grid-2">
+        <label>Module<input name="module" class="input" required /></label>
+        <label>Assigned To<input name="assignedTo" class="input" required /></label>
+      </div>
+      <label>Priority
+        <select name="priority" class="input">
+          <option value="critical">Critical</option>
+          <option value="high">High</option>
+          <option value="medium" selected>Medium</option>
+          <option value="low">Low</option>
+        </select>
+      </label>
+      <button type="submit" class="btn btn-primary full">Create Test Case</button>
+    </form>
+  </div>
+</div>
+
+<!-- Bug Modal -->
+<div class="modal" id="bug-modal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Report Bug</h2>
+      <button class="close-btn" onclick="closeModal('bug-modal')">×</button>
+    </div>
+    <form id="bug-form">
+      <label>Title<input name="title" class="input" required /></label>
+      <label>Description<textarea name="description" class="input" required></textarea></label>
+      <div class="grid-2">
+        <label>Module<input name="module" class="input" required /></label>
+        <label>Assigned To<input name="assignedTo" class="input" required /></label>
+      </div>
+      <label>Severity
+        <select name="severity" class="input">
+          <option value="critical">Critical</option>
+          <option value="high">High</option>
+          <option value="medium" selected>Medium</option>
+          <option value="low">Low</option>
+        </select>
+      </label>
+      <button type="submit" class="btn btn-primary full">Report Bug</button>
+    </form>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
