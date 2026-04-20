@@ -1,7 +1,5 @@
 
-let testCases = [...sampleTestCases];
-let bugs = [...sampleBugs];
-
+// === Navigation ===
 document.querySelectorAll('.nav-link[data-page]').forEach(link => {
   link.addEventListener('click', e => {
     e.preventDefault();
@@ -23,25 +21,30 @@ const badge = (type, val) => `<span class="badge badge-${val}">${val.replace('_'
 const today = () => new Date().toISOString().split('T')[0];
 
 function renderDashboard() {
+  if (!testCases || testCases.length === 0) {
+    document.getElementById('stats-grid').innerHTML = '<div class="stat-card"><div class="stat-label">Loading data...</div></div>';
+    return;
+  }
+
   const passed = testCases.filter(t => t.status === 'passed').length;
-  const passRate = Math.round((passed / testCases.length) * 100);
+  const passRate = testCases.length > 0 ? Math.round((passed / testCases.length) * 100) : 0;
   const openBugs = bugs.filter(b => b.status === 'open').length;
   const critical = bugs.filter(b => b.severity === 'critical').length;
   const inProgress = bugs.filter(b => b.status === 'in_progress').length;
 
   document.getElementById('stats-grid').innerHTML = `
-    <div class="stat-card"><span class="stat-icon"></span><div class="stat-label">Total Tests</div><div class="stat-value">${testCases.length}</div><div class="stat-sub">across modules</div></div>
-    <div class="stat-card"><span class="stat-icon"></span><div class="stat-label">Pass Rate</div><div class="stat-value" style="color:var(--success)">${passRate}%</div><div class="stat-sub">↑ 5% from last week</div></div>
-    <div class="stat-card"><span class="stat-icon"></span><div class="stat-label">Open Bugs</div><div class="stat-value" style="color:var(--danger)">${openBugs}</div><div class="stat-sub">${critical} critical</div></div>
-    <div class="stat-card"><span class="stat-icon"></span><div class="stat-label">In Progress</div><div class="stat-value" style="color:var(--warning)">${inProgress}</div><div class="stat-sub">being fixed</div></div>
+    <div class="stat-card"><span class="stat-icon">🧪</span><div class="stat-label">Total Tests</div><div class="stat-value">${testCases.length}</div><div class="stat-sub">across modules</div></div>
+    <div class="stat-card"><span class="stat-icon">📈</span><div class="stat-label">Pass Rate</div><div class="stat-value" style="color:var(--success)">${passRate}%</div><div class="stat-sub">↑ 5% from last week</div></div>
+    <div class="stat-card"><span class="stat-icon">🐞</span><div class="stat-label">Open Bugs</div><div class="stat-value" style="color:var(--danger)">${openBugs}</div><div class="stat-sub">${critical} critical</div></div>
+    <div class="stat-card"><span class="stat-icon">⏱️</span><div class="stat-label">In Progress</div><div class="stat-value" style="color:var(--warning)">${inProgress}</div><div class="stat-sub">being fixed</div></div>
   `;
 
-  document.getElementById('recent-bugs').innerHTML = bugs.slice(0, 4).map(b => `
+  document.getElementById('recent-bugs').innerHTML = bugs.length > 0 ? bugs.slice(0, 4).map(b => `
     <div>
       <div style="display:flex;gap:12px;align-items:center"><span class="mono-id">${b.id}</span><span>${b.title}</span></div>
       <div style="display:flex;gap:6px">${badge('sev', b.severity)} ${badge('status', b.status)}</div>
     </div>
-  `).join('');
+  `).join('') : '<div style="padding:20px;color:var(--muted)">No bugs to display</div>';
 
   drawPieChart();
   drawBugsBarChart();
@@ -71,6 +74,8 @@ function drawBugsBarChart() {
 }
 
 function renderTestCases() {
+  if (!testCases) return;
+  
   const search = document.getElementById('tc-search').value.toLowerCase();
   const filter = document.getElementById('tc-filter').value;
   const filtered = testCases.filter(tc =>
@@ -86,7 +91,7 @@ function renderTestCases() {
       <td style="color:var(--muted)">${tc.module}</td>
       <td>${badge('p', tc.priority)}</td>
       <td>${badge('s', tc.status)}</td>
-      <td style="color:var(--muted)">${tc.assignedTo}</td>
+      <td style="color:var(--muted)">${tc.assignedTo || 'Unassigned'}</td>
       <td class="mono-id">${tc.lastRun ?? '—'}</td>
     </tr>
   `).join('') : `<tr><td colspan="7" class="empty">No test cases found</td></tr>`;
@@ -102,6 +107,8 @@ document.getElementById('tc-form').addEventListener('submit', e => {
 });
 
 function renderBugs() {
+  if (!bugs) return;
+  
   const search = document.getElementById('bug-search').value.toLowerCase();
   const sev = document.getElementById('bug-sev').value;
   const status = document.getElementById('bug-status').value;
@@ -122,8 +129,8 @@ function renderBugs() {
       <div class="bug-desc">${b.description}</div>
       <div class="bug-footer">
         <span>Module: <span>${b.module}</span></span>
-        <span>Assigned: <span>${b.assignedTo}</span></span>
-        <span>Reporter: <span>${b.reporter}</span></span>
+        <span>Assigned: <span>${b.assignedTo || 'Unassigned'}</span></span>
+        <span>Reporter: <span>${b.reporter || 'Unknown'}</span></span>
         <span class="mono-id">${b.updatedAt}</span>
       </div>
     </div>
@@ -165,6 +172,5 @@ function renderReports() {
   });
 }
 
-renderDashboard();
-renderTestCases();
-renderBugs();
+// === Init ===
+// Data will be fetched and rendered by data.js functions
