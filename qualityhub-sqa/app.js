@@ -96,16 +96,9 @@ document.getElementById('tc-filter').addEventListener('change', renderTestCases)
 document.getElementById('tc-form').addEventListener('submit', e => {
   e.preventDefault();
   const fd = new FormData(e.target);
-  testCases.unshift({
-    id: `TC-${String(testCases.length + 1).padStart(3, '0')}`,
-    title: fd.get('title'), description: fd.get('description'),
-    module: fd.get('module'), priority: fd.get('priority'),
-    status: 'not_run', assignedTo: fd.get('assignedTo'),
-    createdAt: today(), lastRun: null
-  });
+  submitTestCase(fd);
   e.target.reset();
   closeModal('tc-modal');
-  renderTestCases();
 });
 
 function renderBugs() {
@@ -143,17 +136,9 @@ function renderBugs() {
 document.getElementById('bug-form').addEventListener('submit', e => {
   e.preventDefault();
   const fd = new FormData(e.target);
-  bugs.unshift({
-    id: `BUG-${String(bugs.length + 1).padStart(3, '0')}`,
-    title: fd.get('title'), description: fd.get('description'),
-    severity: fd.get('severity'), status: 'open',
-    assignedTo: fd.get('assignedTo'), reporter: 'Current User',
-    module: fd.get('module'),
-    createdAt: today(), updatedAt: today()
-  });
+  submitBug(fd);
   e.target.reset();
   closeModal('bug-modal');
-  renderBugs();
 });
 
 function renderReports() {
