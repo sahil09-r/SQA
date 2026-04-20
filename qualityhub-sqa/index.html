@@ -10,7 +10,6 @@
 </head>
 <body>
 <div class="app">
-  <!-- Sidebar -->
   <aside class="sidebar">
     <div class="sidebar-header">
       <div class="logo-icon">🛡️</div>
@@ -20,17 +19,16 @@
       </div>
     </div>
     <nav class="nav">
-      <a href="#" class="nav-link active" data-page="dashboard">📊 Dashboard</a>
-      <a href="#" class="nav-link" data-page="testcases">🧪 Test Cases</a>
-      <a href="#" class="nav-link" data-page="bugs">🐞 Bug Tracking</a>
-      <a href="#" class="nav-link" data-page="reports">📈 Reports</a>
+      <a href="#" class="nav-link active" data-page="dashboard"> Dashboard</a>
+      <a href="#" class="nav-link" data-page="testcases"> Test Cases</a>
+      <a href="#" class="nav-link" data-page="bugs"> Bug Tracking</a>
+      <a href="#" class="nav-link" data-page="reports"> Reports</a>
     </nav>
     <div class="sidebar-footer">
       <a href="#" class="nav-link">⚙️ Settings</a>
     </div>
   </aside>
 
-  <!-- Main -->
   <main class="main">
     <!-- Dashboard -->
     <section id="dashboard" class="page active">
@@ -55,7 +53,6 @@
       </div>
     </section>
 
-    <!-- Test Cases -->
     <section id="testcases" class="page">
       <header class="page-header flex-between">
         <div>
@@ -84,7 +81,6 @@
       </div>
     </section>
 
-    <!-- Bug Tracking -->
     <section id="bugs" class="page">
       <header class="page-header flex-between">
         <div>
@@ -94,7 +90,7 @@
         <button class="btn btn-primary" onclick="openModal('bug-modal')">+ Report Bug</button>
       </header>
       <div class="filters">
-        <input type="text" id="bug-search" placeholder="🔍 Search bugs..." class="input" />
+        <input type="text" id="bug-search" placeholder=" Search bugs..." class="input" />
         <select id="bug-sev" class="input">
           <option value="all">All Severity</option>
           <option value="critical">Critical</option>
@@ -113,7 +109,6 @@
       <div id="bug-list" class="bug-list"></div>
     </section>
 
-    <!-- Reports -->
     <section id="reports" class="page">
       <header class="page-header">
         <h1>Reports</h1>
@@ -133,7 +128,6 @@
   </main>
 </div>
 
-<!-- Test Case Modal -->
 <div class="modal" id="tc-modal">
   <div class="modal-content">
     <div class="modal-header">
@@ -160,7 +154,6 @@
   </div>
 </div>
 
-<!-- Bug Modal -->
 <div class="modal" id="bug-modal">
   <div class="modal-content">
     <div class="modal-header">
